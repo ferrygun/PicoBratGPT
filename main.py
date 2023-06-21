@@ -13,8 +13,6 @@ import hashlib
 from urlencode import urlencode
 from picochromecast import play_url
 
-key = 'UkXp2s5v8y/B?D(G+KbPeShVmYq3t6w9'
-
 def unixTimestamp():
     return round(time.time() * 1000)
 
