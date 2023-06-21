@@ -9,6 +9,10 @@ from machine import Pin
 import gc
 import ubinascii
 import hashlib
+
+from urlencode import urlencode
+from picochromecast import play_url
+
 key = 'UkXp2s5v8y/B?D(G+KbPeShVmYq3t6w9'
 
 def unixTimestamp():
@@ -39,17 +43,25 @@ def bartgpt(prompt):
 
         }
     
-    payload = '{"prompt": [{"role": "user", "content": "time now is 20:11"}]}'
+    payload = '{"prompt": [{"role": "user", "content": "' + prompt +'"}]}'
+    #print(payload)
     
     response = urequest1.post('https://bratgpt.com/api/generate', data=payload, headers=headers)
-    print(response.text)
+    if response.status_code == 500:
+        error_message = response.json()["error"]["message"]
+        # Handle the error
+        print("Error 500: ", error_message)
+    else:
+        print(response.text)
+        response_content = response.content.decode('utf-8')
+        response_text = response_content.replace('\n', '')
+        print(response_text)
+
+        url = 'https://translate.google.com/translate_tts?client=tw-ob&' + urlencode({'q': response_text, 'tl': 'en'})
+        play_url(url, '192.168.50.23')
     
-   
     response.close()
     return
-
-
-
         
 country = 'SG'
 ssid = ''
@@ -59,4 +71,5 @@ wifi_connection = netman.connectWiFi(ssid,password,country)
 
 while True:
     gc.collect()
-    bartgpt("hey")
+    bartgpt("write a humor in english. Reply nicely in english in very short 2 sentences and translate to english")
+    time.sleep(10) 
