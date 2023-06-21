@@ -56,7 +56,7 @@ def bartgpt(prompt):
         print(response_text)
 
         url = 'https://translate.google.com/translate_tts?client=tw-ob&' + urlencode({'q': response_text, 'tl': 'en'})
-        play_url(url, '192.168.50.23')
+        play_url(url, '192.168.XX.YY')
     
     response.close()
     return
